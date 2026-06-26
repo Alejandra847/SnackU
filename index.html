@@ -1238,7 +1238,8 @@ document.getElementById('registerForm').addEventListener('submit', function(e){
     rol: rolAsignado 
   });
 
-  showNotification(`¡Cuenta creada con éxito! Rol asignado: ${rolAsignado}`);
+  // Mensaje personalizado con el nombre de la persona
+  showNotification(`¡Cuenta creada con éxito! Bienvenido/a, ${registroOficial.nombre}`, 'success');
   this.reset();
   showView('login');
 });
@@ -1269,7 +1270,8 @@ document.getElementById('loginForm').addEventListener('submit', function(e){
     failedAttempts = 0;
     loggedInUser = user;
     loginSuccess(user);
-    showNotification(`¡Bienvenido de nuevo, ${user.nombre}!`, 'success');
+    // Mensaje personalizado con el nombre de la persona
+    showNotification(`¡Bienvenido/a, ${user.nombre}!`, 'success');
   } else {
     failedAttempts++;
     if (failedAttempts >= MAX_ATTEMPTS){
