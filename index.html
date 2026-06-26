@@ -736,7 +736,7 @@
       <div class="security-label">Verificación de seguridad</div>
       <div class="captcha-box">
         <div class="g-recaptcha"
-             data-sitekey="6LfCOhwtAAAAAHCXRq0VaZf0Ab7qfXCv3p_D4-rj"
+             data-sitekey="6LccRDctAAAAAFarSQXoTRR3O9x8CZaJJab3TSNf"
              data-callback="onCaptchaSuccess"
              data-expired-callback="onCaptchaExpired"></div>
         <div class="captcha-success" id="captchaSuccessMsg">Verificación exitosa.</div>
@@ -830,7 +830,6 @@
             <select id="addRol">
               <option value="Usuario">Usuario</option>
               <option value="Encargado">Encargado</option>
-              <option value="Administrador">Administrador</option>
             </select>
           </div>
           <button type="submit" class="btn btn-primary" style="padding: 10px 20px; font-size: 12px; border-radius: 8px; width: auto;">Registrar e Integrar</button>
@@ -982,7 +981,6 @@ let lockInterval = null;
 let isLocked = false;
 let captchaVerifiedLogin = false;
 
-// TIEMPO DE INACTIVIDAD: 1 MINUTO (60 segundos)
 const SESSION_TIMEOUT_MS = 60 * 1000;
 let sessionTimer = null;
 const activityEvents = ['mousemove','keydown','click','scroll','touchstart'];
@@ -1382,7 +1380,6 @@ function renderUsersTable(filterText = '') {
           <select class="action-select" data-prev="${u.rol}" onchange="cambiarRolDesdeTabla('${u.matricula}', this)" ${isSelf || isSystemAdmin ? 'disabled' : ''}>
             <option value="Usuario" ${u.rol === 'Usuario' ? 'selected' : ''}>Usuario</option>
             <option value="Encargado" ${u.rol === 'Encargado' ? 'selected' : ''}>Encargado</option>
-            <option value="Administrador" ${u.rol === 'Administrador' ? 'selected' : ''}>Administrador</option>
           </select>
           <button class="btn btn-danger action-btn-sm" onclick="eliminarUsuarioDesdeTabla('${u.matricula}')" ${isSelf || isSystemAdmin ? 'disabled style="background:#ccc;box-shadow:none;cursor:not-allowed;"' : ''} title="Eliminar Usuario">
             <i class="fas fa-trash"></i>
@@ -1413,6 +1410,12 @@ document.getElementById('adminAddUserForm').addEventListener('submit', function(
     return;
   }
 
+  // No permitir crear otro administrador
+  if (rolSelected === 'Administrador') {
+    showNotification('No se pueden crear más administradores. Solo existe un administrador principal.', 'error');
+    return;
+  }
+
   if (users.some(u => u.matricula === mat)) {
     showNotification('Error: Ya existe un usuario con esa matrícula.', 'error');
     return;
@@ -1434,6 +1437,13 @@ document.getElementById('adminAddUserForm').addEventListener('submit', function(
 function cambiarRolDesdeTabla(matricula, selectElement) {
   const usuario = users.find(u => u.matricula === matricula);
   if (!usuario) return;
+
+  // No permitir cambiar a Administrador
+  if (selectElement.value === 'Administrador') {
+    showNotification('No se puede asignar el rol de Administrador. Solo existe un administrador principal.', 'error');
+    selectElement.value = usuario.rol;
+    return;
+  }
 
   currentActionType = "CHANGE_ROLE";
   pendingSelectElement = selectElement;
@@ -1571,7 +1581,6 @@ function stopSessionWatcher(){
 function resetSessionTimer(){
   clearTimeout(sessionTimer);
   sessionTimer = setTimeout(function(){
-    // Mostrar directamente el modal de sesión expirada (sin notificación)
     ejecutarLogoutEfectivo(true);
   }, SESSION_TIMEOUT_MS);
 }
