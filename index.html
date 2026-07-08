@@ -964,7 +964,12 @@
 const BASE_DATOS_UNIVERSIDAD = [
   { matricula: "ADM001", correo: "admin@snacku.com", nombre: "Administrador General" },
   { matricula: "ENC001", correo: "encargado@snacku.com", nombre: "Encargado de Tienda" },
-  { matricula: "ALU001", correo: "usuario@snacku.com", nombre: "Usuario Regular" }
+  { matricula: "ALU001", correo: "usuario@snacku.com", nombre: "Usuario Regular" },
+  { matricula: "ALU002", correo: "maria@gmail.com", nombre: "María López" },
+  { matricula: "ALU003", correo: "carlos@gmail.com", nombre: "Carlos Ramírez" },
+  { matricula: "ALU004", correo: "sofia@gmail.com", nombre: "Sofía Torres" },
+  { matricula: "ENC002", correo: "juan@gmail.com", nombre: "Juan Pérez" },
+  { matricula: "ADM002", correo: "laura@gmail.com", nombre: "Laura Díaz" }
 ];
 
 let users = [
@@ -1238,8 +1243,7 @@ document.getElementById('registerForm').addEventListener('submit', function(e){
     rol: rolAsignado 
   });
 
-  // Mensaje personalizado con el nombre de la persona
-  showNotification(`¡Cuenta creada con éxito! Bienvenido/a, ${registroOficial.nombre}`, 'success');
+  showNotification(`¡Cuenta creada con éxito! Rol asignado: ${rolAsignado}`);
   this.reset();
   showView('login');
 });
@@ -1270,8 +1274,7 @@ document.getElementById('loginForm').addEventListener('submit', function(e){
     failedAttempts = 0;
     loggedInUser = user;
     loginSuccess(user);
-    // Mensaje personalizado con el nombre de la persona
-    showNotification(`¡Bienvenido/a, ${user.nombre}!`, 'success');
+    showNotification(`¡Bienvenido de nuevo, ${user.nombre}!`, 'success');
   } else {
     failedAttempts++;
     if (failedAttempts >= MAX_ATTEMPTS){
